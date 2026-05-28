@@ -4,7 +4,6 @@ import sys
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from gui.main_window import MainWindow
-from gui.tray import TrayIcon
 from database import init_db, get_all_subscriptions
 from services.weather import get_weather_aggregated
 from services.currency import get_currency_rates, CURRENCY_PAIRS
@@ -27,8 +26,6 @@ class OnTimeBotApp:
 
         self.main_window = MainWindow(self.scheduler)
         self.main_window.show_notification_signal.connect(self.show_windows_notification)
-
-        self.tray = TrayIcon(self.main_window)
 
         self.restore_subscriptions()
         self.scheduler.start()
@@ -73,6 +70,7 @@ class OnTimeBotApp:
             print(f"Notification error: {e}")
 
     def run(self):
+        self.main_window.load_subscriptions()
         self.main_window.show()
         sys.exit(self.app.exec())
 
